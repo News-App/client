@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:intl/intl.dart';
 import 'package:newsapp/Store.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NewsDetails extends StatefulWidget
 {
@@ -18,6 +19,7 @@ class NewsDetailsState extends State<NewsDetails>
 	String pic = "";
 	String description = "";
 	String content = "";
+	String url = "";
 
 	void initState()
 	{
@@ -31,6 +33,7 @@ class NewsDetailsState extends State<NewsDetails>
 			this.pic = Store.store.getString("pic") == null? ("NA"): (Store.store.getString("pic"));
 			this.description = Store.store.getString("description") == null? ("NA"): (Store.store.getString("description"));
 			this.content = Store.store.getString("content") == null? ("NA"): (Store.store.getString("content"));
+			this.url = Store.store.getString("url") == null? ("NA"): (Store.store.getString("url"));
 		}
 		catch(e)
 		{
@@ -107,14 +110,21 @@ class NewsDetailsState extends State<NewsDetails>
 					items: 
 					[
 						BottomNavigationBarItem
-						(
+						(							
 							title: Text("Share"),
 							icon: Icon(Icons.message)
-						),
+						),						
 						BottomNavigationBarItem
 						(
 							title: Text("Read More"),
-							icon: Icon(Icons.more)
+							icon: IconButton
+							(
+								onPressed: () async
+								{
+									await this.openLink(this.url);
+								},
+								icon: Icon(Icons.more),
+							)
 						),
 						BottomNavigationBarItem
 						(
@@ -125,5 +135,17 @@ class NewsDetailsState extends State<NewsDetails>
 				)
 			)
 		);
+	}
+
+	openLink(String url) async
+	{
+		if (await canLaunch(url))
+		{
+			await launch(url);
+		}
+		else 
+		{
+			throw "Could Not Open" + url;
+		}
 	}
 }

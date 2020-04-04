@@ -1,8 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:newsapp/Store.dart';
 import 'package:newsapp/api.dart';
+import 'package:newsapp/widgets/helpers/messenger.dart';
 import 'loader.dart';
 
 class Home extends StatefulWidget
@@ -25,7 +25,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 		WidgetsBinding.instance.addPostFrameCallback((_)
 		{
-			fetchNews();			
+			fetchNews();
 		});
 	}
 
@@ -90,6 +90,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 										await Store.store.setString("pic", this.news[index]["_source"]["urlToImage"]);
 										await Store.store.setString("author", this.news[index]["_source"]["author"]);
 										await Store.store.setString("content", this.news[index]["_source"]["content"]);
+										await Store.store.setString("url", this.news[index]["_source"]["url"]);
 
 										Navigator.pushNamed(context, "details");
 									},
@@ -108,7 +109,8 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 		Api apiClient = Api();
 		await Store.init();
-		
+
+		Messenger();
 
 		String url = this.prefixUrl + "/headlines/fetch";
 
