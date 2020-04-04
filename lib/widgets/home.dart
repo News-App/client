@@ -124,6 +124,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 			setState(() 
 			{
 			  this.news = parsedResponse["data"];
+			  this.news = this.news.reversed.toList();
 			});
 		}
 
