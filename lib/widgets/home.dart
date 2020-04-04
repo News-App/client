@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:newsapp/Store.dart';
 import 'package:newsapp/api.dart';
 import 'loader.dart';
 
@@ -52,7 +53,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 					padding: EdgeInsets.all(10.0),					
 					alignment: Alignment.topCenter,
 					child: ListView.builder
-					(						
+					(
 						itemCount: this.news.length,
 						itemBuilder: (context, index)
 						{							
@@ -80,7 +81,18 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 											Container(margin: EdgeInsets.only(top:10.0)),
 											Text(this.news[index]["_source"]["publishedAt"],style: TextStyle(fontFamily: "comic-sans", fontSize: 13.0, color: Colors.white, backgroundColor: Colors.red))
 										]
-									)
+									),
+									onTap: () async
+									{
+										await Store.store.setString("title", this.news[index]["_source"]["title"]);
+										await Store.store.setString("description", this.news[index]["_source"]["description"]);
+										await Store.store.setString("created", this.news[index]["_source"]["publishedAt"]);
+										await Store.store.setString("pic", this.news[index]["_source"]["urlToImage"]);
+										await Store.store.setString("author", this.news[index]["_source"]["author"]);
+										await Store.store.setString("content", this.news[index]["_source"]["content"]);
+
+										Navigator.pushNamed(context, "details");
+									},
 								)
 							);
 						}	
@@ -95,6 +107,8 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 		showDialog(context: context, barrierDismissible: false, builder: (BuildContext context) => Loader("Please Wait"));
 
 		Api apiClient = Api();
+		await Store.init();
+		
 
 		String url = this.prefixUrl + "/headlines/fetch";
 

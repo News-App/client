@@ -1,7 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:newsapp/widgets/home.dart';
-// import 'package:newsapp/widgets/login.dart';
+import 'package:newsapp/widgets/news_details.dart';
+
+import 'widgets/home.dart';
 
 void main() 
 {
@@ -12,8 +13,8 @@ void main()
 		initialRoute: "/",
 		routes: 
 		{
-			// "/": (context) => Login(),
-			"/": (context) => Home()
+			"/": (context) => Home(),
+			"details": (context) => NewsDetails(),
 		}
 	));
 }
