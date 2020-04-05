@@ -1,22 +1,54 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:newsapp/widgets/home.dart';
 import 'package:newsapp/widgets/news_details.dart';
-
-import 'widgets/home.dart';
 
 void main() 
 {
 	runApp(MaterialApp
 	(
 		debugShowCheckedModeBanner: false,
-		title: "News App",
-		initialRoute: "/",
+		theme: ThemeData(primaryColor: Colors.red, accentColor: Colors.yellowAccent),
+		home: Splash(),
+		title: "News App",		
 		routes: 
 		{
-			"/": (context) => Home(),
+			"home": (context) => Home(),
 			"details": (context) => NewsDetails(),
-		}
+		}		
 	));
+}
+
+class Splash extends StatefulWidget
+{
+	createState()
+	{
+		return(SplashState());
+	}
+}
+
+class SplashState extends State<Splash>
+{
+	Widget build(BuildContext context)
+	{
+		return
+		(
+			Container
+			(
+				color: Colors.redAccent,
+			)
+		);
+	}
+
+	initState()
+	{
+		super.initState();
+		Timer(Duration(seconds:5), ()
+		{
+			Navigator.pushReplacementNamed(context, "home");
+		});
+	}
 }
 
 

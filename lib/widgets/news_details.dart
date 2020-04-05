@@ -34,6 +34,8 @@ class NewsDetailsState extends State<NewsDetails>
 			this.description = Store.store.getString("description") == null? ("NA"): (Store.store.getString("description"));
 			this.content = Store.store.getString("content") == null? ("NA"): (Store.store.getString("content"));
 			this.url = Store.store.getString("url") == null? ("NA"): (Store.store.getString("url"));
+
+			print(this);
 		}
 		catch(e)
 		{

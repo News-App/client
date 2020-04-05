@@ -12,6 +12,7 @@ class Loader extends StatelessWidget
 		(
 			content: Container
 			(
+				color: Colors.transparent,
 				padding: EdgeInsets.only(top: 20.0),
 				height: 100.0,
 				width: 100.0,
