@@ -7,8 +7,8 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="newsapp"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Minutes"
+        android:icon="@mipmap/ficon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
