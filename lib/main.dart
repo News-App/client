@@ -9,7 +9,7 @@ void main()
 	runApp(MaterialApp
 	(
 		debugShowCheckedModeBanner: false,
-		theme: ThemeData(primaryColor: Colors.red, accentColor: Colors.yellowAccent),
+		theme: ThemeData(primaryColor: Colors.red, accentColor: Colors.white),
 		home: Splash(),
 		title: "News App",		
 		routes: 

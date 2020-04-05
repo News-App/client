@@ -35,7 +35,14 @@ class NewsDetailsState extends State<NewsDetails>
 			this.content = Store.store.getString("content") == null? ("NA"): (Store.store.getString("content"));
 			this.url = Store.store.getString("url") == null? ("NA"): (Store.store.getString("url"));
 
-			print(this);
+			print("Hello");
+			print(this.title);
+			print(this.author);
+			print(this.created);
+			print(this.pic);
+			print(this.description);
+			print(this.content);
+			print(this.url);
 		}
 		catch(e)
 		{
@@ -52,6 +59,11 @@ class NewsDetailsState extends State<NewsDetails>
 				appBar: AppBar
 				(
 					backgroundColor: Colors.white,
+					title: Text("In Brief", style: TextStyle(color: Colors.red)),										
+					iconTheme: IconThemeData
+					(
+						color: Colors.red
+					),
 				),
 				body: SingleChildScrollView
 				(
@@ -84,7 +96,7 @@ class NewsDetailsState extends State<NewsDetails>
 													(
 														children: 
 														[
-															Icon(Icons.face, color: Colors.green,),
+															Icon(Icons.face, color: Colors.red,),
 															Text(" " + this.author)
 														]
 													),
@@ -97,7 +109,7 @@ class NewsDetailsState extends State<NewsDetails>
 											),
 											Container
 											(																						
-												child: Text(this.description+ "\n\n" + this.content.substring(0,260), style: TextStyle(fontSize: 17.0)),
+												child: Text(this.description+ "\n\n" + this.content, style: TextStyle(fontSize: 17.0)),
 											)										
 										]
 									)

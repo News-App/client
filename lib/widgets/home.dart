@@ -25,7 +25,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 	int randomIndex = 0;
 
-	List <dynamic> news = [{"_source":{"title":"abc", "description": "abc", "author": "abc", "publishedAt": "abc", "urlToImage": "https://www.teliacompany.com/Assets/Images/not-available.png"}}];
+	List <dynamic> news = [{"_source":{"title":"abc", "description": "abc", "author": "abc", "publishedAt": "2020-04-04T22:25:05Z", "urlToImage": "https://www.teliacompany.com/Assets/Images/not-available.png"}}];
 
 	void initState()
 	{
@@ -76,7 +76,8 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 							(
 								child: Container
 								(										
-									height: 250.0,								
+									height: 250.0,			
+									margin: EdgeInsets.only(bottom: 10.0),					
 									child: Card
 									(									
 										semanticContainer: true,																							
@@ -166,7 +167,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 															Navigator.pushNamed(context, "details");
 														},
 													),
-													Divider()
+													Divider(color: Colors.grey)
 												],
 											);											
 										}	
@@ -182,7 +183,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 	fetchNews() async
 	{
-		showDialog(context: context, barrierDismissible: false, builder: (BuildContext context) => Loader("Please Wait"));
+		showDialog(context: context, barrierDismissible: false, builder: (BuildContext context) => Loader("Fetching latest news"));
 
 		Api apiClient = Api();
 		await Store.init();

@@ -22,7 +22,7 @@ class Loader extends StatelessWidget
 					[
 						CircularProgressIndicator
 						(
-							backgroundColor: Colors.green,
+							backgroundColor: Colors.redAccent,
 						),
 						Container(child: Text(this.message), margin: EdgeInsets.only(top:20.0))
 					]
