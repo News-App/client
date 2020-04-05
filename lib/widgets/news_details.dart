@@ -1,4 +1,16 @@
+
+// import 'dart:io';
+// import 'dart:typed_data';
+
+// import 'dart:io';
+// import 'dart:typed_data';
+
+import 'package:esys_flutter_share/esys_flutter_share.dart';
+// import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import "package:flutter/material.dart";
+// import 'package:flutter/services.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:newsapp/Store.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -118,34 +130,48 @@ class NewsDetailsState extends State<NewsDetails>
 						),
 					)
 				),
-				bottomNavigationBar: BottomNavigationBar
-				(
-					currentIndex: 1,
-					items: 
-					[
-						BottomNavigationBarItem
-						(							
-							title: Text("Share"),
-							icon: Icon(Icons.message)
-						),						
-						BottomNavigationBarItem
-						(
-							title: Text("Read More"),
-							icon: IconButton
-							(
+				bottomNavigationBar: BottomAppBar
+				(					
+					child: Row
+					(
+						mainAxisAlignment: MainAxisAlignment.spaceBetween,
+						children: 
+						[
+							FlatButton
+							(							
+								child: Column
+								(
+									mainAxisSize: MainAxisSize.min,
+									children: 
+									[
+										Icon(Icons.share, color: Colors.red),
+										Text("Share", style: TextStyle(fontSize: 10)),
+									],
+								),
+								onPressed: () async
+								{
+									var resp = await get(this.pic);										
+									await Share.file(this.title, this.title, resp.bodyBytes, 'image/jpeg', text: this.title);
+								},
+							),
+							FlatButton
+							(								
+								child: Column
+								(
+									mainAxisSize: MainAxisSize.min,
+									children: 
+									[
+										Icon(Icons.more, color: Colors.red),
+										Text("Read More", style: TextStyle(fontSize: 10)),
+									],
+								),
 								onPressed: () async
 								{
 									await this.openLink(this.url);
-								},
-								icon: Icon(Icons.more),
-							)
-						),
-						BottomNavigationBarItem
-						(
-							title: Text("Bookmark"),
-							icon: Icon(Icons.bookmark)
-						)
-					]
+								}
+							),
+						]
+					)
 				)
 			)
 		);

@@ -39,6 +39,18 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 	Widget build(BuildContext context)
 	{
+		final Map arguments = ModalRoute.of(context).settings.arguments as Map;
+		
+		setState(() 
+		{			
+			this.news = arguments["news"];
+			this.randomIndex = arguments["randomIndex"];
+
+			this.firstTitle = this.news[randomIndex]["_source"]["title"];
+			this.firstDate = this.news[randomIndex]["_source"]["publishedAt"];
+			this.firstPic = this.news[randomIndex]["_source"]["urlToImage"];
+		});
+
 		return 
 		(
 			Scaffold
@@ -183,6 +195,12 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 	fetchNews() async
 	{
+		if (Store.store.getString("splashed") == "1")
+		{
+			await Store.store.setString("splashed", "0");
+			return(0);
+		}
+
 		showDialog(context: context, barrierDismissible: false, builder: (BuildContext context) => Loader("Fetching latest news"));
 
 		Api apiClient = Api();
