@@ -1,40 +1,69 @@
 {
-  "project_info": {
-    "project_number": "662444665859",
-    "firebase_url": "https://the-news-app-1302d.firebaseio.com",
-    "project_id": "the-news-app-1302d",
-    "storage_bucket": "the-news-app-1302d.appspot.com"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:662444665859:android:e942bd54fefb68afb5b236",
-        "android_client_info": {
-          "package_name": "com.souparnika.newsapp"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "662444665859-0g7fgii8cje4firlbhmv3emoujiu9jok.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAayjpT_ferugO5EH_0TYc8mpaQsulaHhs"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "662444665859-0g7fgii8cje4firlbhmv3emoujiu9jok.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    }
-  ],
-  "configuration_version": "1"
-}
+	"project_info": {
+	  "project_number": "662444665859",
+	  "firebase_url": "https://the-news-app-1302d.firebaseio.com",
+	  "project_id": "the-news-app-1302d",
+	  "storage_bucket": "the-news-app-1302d.appspot.com"
+	},
+	"client": [
+	  {
+		"client_info": {
+		  "mobilesdk_app_id": "1:662444665859:android:e942bd54fefb68afb5b236",
+		  "android_client_info": {
+			"package_name": "com.example.newsapp"
+		  }
+		},
+		"oauth_client": [
+		  {
+			"client_id": "662444665859-0g7fgii8cje4firlbhmv3emoujiu9jok.apps.googleusercontent.com",
+			"client_type": 3
+		  }
+		],
+		"api_key": [
+		  {
+			"current_key": "AIzaSyAayjpT_ferugO5EH_0TYc8mpaQsulaHhs"
+		  }
+		],
+		"services": {
+		  "appinvite_service": {
+			"other_platform_oauth_client": [
+			  {
+				"client_id": "662444665859-0g7fgii8cje4firlbhmv3emoujiu9jok.apps.googleusercontent.com",
+				"client_type": 3
+			  }
+			]
+		  }
+		}
+	  },
+	  {
+		"client_info": {
+		  "mobilesdk_app_id": "1:662444665859:android:c137d62d5fc703efb5b236",
+		  "android_client_info": {
+			"package_name": "com.souparnika.newsapp"
+		  }
+		},
+		"oauth_client": [
+		  {
+			"client_id": "662444665859-0g7fgii8cje4firlbhmv3emoujiu9jok.apps.googleusercontent.com",
+			"client_type": 3
+		  }
+		],
+		"api_key": [
+		  {
+			"current_key": "AIzaSyAayjpT_ferugO5EH_0TYc8mpaQsulaHhs"
+		  }
+		],
+		"services": {
+		  "appinvite_service": {
+			"other_platform_oauth_client": [
+			  {
+				"client_id": "662444665859-0g7fgii8cje4firlbhmv3emoujiu9jok.apps.googleusercontent.com",
+				"client_type": 3
+			  }
+			]
+		  }
+		}
+	  }
+	],
+	"configuration_version": "1"
+  }
