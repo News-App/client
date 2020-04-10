@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:newsapp/Store.dart';
 import 'package:newsapp/api.dart';
 import 'package:newsapp/widgets/helpers/messenger.dart';
+import 'package:toast/toast.dart';
 import 'loader.dart';
 
 class Home extends StatefulWidget
@@ -29,11 +31,11 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 	void initState()
 	{
-		super.initState();
+		super.initState();		
 
 		WidgetsBinding.instance.addPostFrameCallback((_)
 		{
-			fetchNews();
+			firebaseInitialize();			
 		});
 	}
 
@@ -48,7 +50,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 			this.firstTitle = this.news[randomIndex]["_source"]["title"];
 			this.firstDate = this.news[randomIndex]["_source"]["publishedAt"];
-			this.firstPic = this.news[randomIndex]["_source"]["urlToImage"];
+			this.firstPic = this.news[randomIndex]["_source"]["urlToImage"] == null? "https://www.teliacompany.com/Assets/Images/not-available.png": this.news[randomIndex]["_source"]["urlToImage"];
 		});
 
 		return 
@@ -193,7 +195,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 		);
 	}
 
-	fetchNews() async
+	fetchNews({bool showLoader = true}) async
 	{
 		if (Store.store.getString("splashed") == "1")
 		{
@@ -201,7 +203,10 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 			return(0);
 		}
 
-		showDialog(context: context, barrierDismissible: false, builder: (BuildContext context) => Loader("Fetching latest news"));
+		if (showLoader)
+		{
+			showDialog(context: context, barrierDismissible: false, builder: (BuildContext context) => Loader("Fetching latest news"));
+		}
 
 		Api apiClient = Api();
 		await Store.init();
@@ -228,11 +233,44 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 				this.firstTitle = parsedResponse["data"][randomIndex]["_source"]["title"];
 				this.firstDate = parsedResponse["data"][randomIndex]["_source"]["publishedAt"];
-				this.firstPic = parsedResponse["data"][randomIndex]["_source"]["urlToImage"];
+				this.firstPic = parsedResponse["data"][randomIndex]["_source"]["urlToImage"] == null? "https://www.teliacompany.com/Assets/Images/not-available.png": parsedResponse["data"][randomIndex]["_source"]["urlToImage"];
 			});
 		}
 
-		Navigator.pop(context);
+		if (showLoader)
+		{
+			Navigator.pop(context);
+		}
 	}
 
+	firebaseInitialize()
+	{
+		print("Firebase initialized");
+
+		final FirebaseMessaging firebaseMessaging = FirebaseMessaging();		
+
+		firebaseMessaging.configure
+		(
+			onMessage: (Map<String, dynamic> message) async
+			{
+				print("onMessage: $message");				
+				
+				Toast.show("Refreshing News", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+
+				this.fetchNews(showLoader: false);
+			},
+			onLaunch: (Map<String, dynamic> message) async
+			{
+				print("onMessage: $message");
+				this.fetchNews(showLoader: false);
+			},
+			onResume: (Map<String, dynamic> message) async
+			{
+				print("onMessage: $message");
+				this.fetchNews(showLoader: false);
+			}			
+		);
+
+		firebaseMessaging.subscribeToTopic("news");
+	}
 }

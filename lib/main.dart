@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:newsapp/Store.dart';
 import 'package:newsapp/api.dart';
-import 'package:newsapp/widgets/helpers/messenger.dart';
 import 'package:newsapp/widgets/home.dart';
 import 'package:newsapp/widgets/news_details.dart';
 
@@ -94,16 +93,18 @@ class SplashState extends State<Splash>
 
 	initState()
 	{
-		super.initState();
+		super.initState();		
 		fetchNews();
 	}
 
 	fetchNews() async
-	{
-		Api apiClient = Api();
-		await Store.init();		
+	{		
+		print("firebased");
 
-		Messenger();
+		Api apiClient = Api();
+		await Store.init();	
+
+		await Store.store.setString("showLoader", "1");	
 
 		String url = "/news/headlines/fetch";
 
@@ -122,24 +123,21 @@ class SplashState extends State<Splash>
 			randomIndex = range.nextInt(10);
 			await Store.store.setString("splashed", "1");
 
-			setState(() 
-			{
-				print("setting state");
+			print("setting state");
 
-				this.news = parsedResponse["data"];				
+			this.news = parsedResponse["data"];				
 
-				Navigator.pushReplacementNamed
-				(
-					context, "home",
-					arguments: 
-					{
-						"news": this.news,
-						"randomIndex": randomIndex
-					}
-				);
-			});
+			Navigator.pushReplacementNamed
+			(
+				context, "home", 
+				arguments: 
+				{
+					"news": this.news,
+					"randomIndex": randomIndex
+				}
+			);
 		}	
-	}
+	}	
 }
 
 

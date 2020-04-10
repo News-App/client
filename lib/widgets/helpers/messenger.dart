@@ -6,6 +6,7 @@ class Messenger extends StatefulWidget
 {
 	createState()
 	{
+		print("MEssger");
 		return(MessengerState());
 	}
 }
@@ -18,8 +19,9 @@ class MessengerState extends State<Messenger>
 	void initState()
 	{
 		super.initState();
+		print("MEssger1");
 
-		subscribeToTopic("news");
+		// firebaseMessaging.subscribeToTopic("news");
 
 		firebaseMessaging.configure
 		(
@@ -28,6 +30,13 @@ class MessengerState extends State<Messenger>
 				print("onMessage: $message");
 
 				final notification = message['notification'];
+
+				final snackBar = SnackBar
+				(
+					content: Text(message["notification"]["title"])
+				);
+
+				Scaffold.of(context).showSnackBar(snackBar);
 
 				setState(() 
 				{
@@ -48,6 +57,8 @@ class MessengerState extends State<Messenger>
 		(
 			const IosNotificationSettings(sound: true, badge: true, alert:true)
 		);
+		
+		print("MEssger2");
 	}
 
 	Widget build(BuildContext context)
@@ -71,10 +82,5 @@ class MessengerState extends State<Messenger>
 				subtitle: Text(message.body),
 			)
 		);
-	}
-
-	void subscribeToTopic(String topic) async 
-	{
-		firebaseMessaging.subscribeToTopic(topic);
-	}
+	}	
 }
