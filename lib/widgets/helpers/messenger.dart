@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:newsapp/widgets/helpers/message.dart';
 
-
 class Messenger extends StatefulWidget
 {
 	createState()

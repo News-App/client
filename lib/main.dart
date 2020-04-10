@@ -116,12 +116,16 @@ class SplashState extends State<Splash>
 
 		if(parsedResponse["status"] == 200)
 		{
+			print("200");
+
 			var range = new Random();
 			randomIndex = range.nextInt(10);
 			await Store.store.setString("splashed", "1");
 
 			setState(() 
 			{
+				print("setting state");
+
 				this.news = parsedResponse["data"];				
 
 				Navigator.pushReplacementNamed
