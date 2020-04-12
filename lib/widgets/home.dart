@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:newsapp/Store.dart';
 import 'package:newsapp/api.dart';
-import 'package:newsapp/widgets/helpers/messenger.dart';
 import 'package:toast/toast.dart';
 import 'loader.dart';
 
@@ -209,9 +208,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 		}
 
 		Api apiClient = Api();
-		await Store.init();
-
-		Messenger();
+		await Store.init();		
 
 		String url = this.prefixUrl + "/headlines/fetch";
 
@@ -259,15 +256,42 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 				this.fetchNews(showLoader: false);
 			},
-			onLaunch: (Map<String, dynamic> message) async
+			onLaunch: (Map<String, dynamic> message) async // Called when app is terminated
 			{
-				print("onMessage: $message");
-				this.fetchNews(showLoader: false);
+				print("onLaunch: $message");
+
+				var data = message["data"];
+
+				print(data);				
+
+				await Store.store.setString("title", data["title"]);
+				await Store.store.setString("description", data["description"]);
+				await Store.store.setString("pic", data["urlToImage"]);				
+				await Store.store.setString("created", data["publishedAt"]);				
+				await Store.store.setString("author", data["author"]);
+				await Store.store.setString("content", data["content"]);
+				await Store.store.setString("url", data["url"]);
+
+				Navigator.pushNamed(context, "details");
 			},
 			onResume: (Map<String, dynamic> message) async
 			{
-				print("onMessage: $message");
-				this.fetchNews(showLoader: false);
+				print("onResume: $message");
+
+
+				var data = message["data"];
+
+				print(data);				
+
+				await Store.store.setString("title", data["title"]);
+				await Store.store.setString("description", data["description"]);
+				await Store.store.setString("pic", data["urlToImage"]);				
+				await Store.store.setString("created", data["publishedAt"]);				
+				await Store.store.setString("author", data["author"]);
+				await Store.store.setString("content", data["content"]);
+				await Store.store.setString("url", data["url"]);
+
+				Navigator.pushNamed(context, "details");
 			}			
 		);
 
