@@ -1,9 +1,8 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:newsapp/Store.dart';
 import 'package:newsapp/api.dart';
+import 'package:newsapp/widgets/categories.dart';
 import 'package:newsapp/widgets/home.dart';
 import 'package:newsapp/widgets/news_details.dart';
 
@@ -19,6 +18,7 @@ void main()
 		{
 			"home": (context) => Home(),
 			"details": (context) => NewsDetails(),
+			"categories": (context) => Categories(),
 		}		
 	));
 }
@@ -35,6 +35,14 @@ class SplashState extends State<Splash>
 {
 	int randomIndex;
 	List <dynamic> news;
+
+	List<dynamic> health = [];
+	List<dynamic> business = [];
+	List<dynamic> headlines = [];
+	List<dynamic> entertainment = [];
+	List<dynamic> technology = [];
+	List<dynamic> science = [];
+	List<dynamic> sports = [];
 
 	Widget build(BuildContext context)
 	{
@@ -104,7 +112,8 @@ class SplashState extends State<Splash>
 		Api apiClient = Api();
 		await Store.init();	
 
-		await Store.store.setString("showLoader", "1");	
+		await Store.store.setString("showLoader", "1");
+		await Store.store.setString("categories", '[{"_source":{"name":""}}]');
 
 		String url = "/news/headlines/fetch";
 
@@ -116,27 +125,55 @@ class SplashState extends State<Splash>
 		print(parsedResponse);
 
 		if(parsedResponse["status"] == 200)
-		{
-			print("200");
-
-			var range = new Random();
-			randomIndex = range.nextInt(10);
+		{			
+			int randomIndex = 0;
 			await Store.store.setString("splashed", "1");
 
-			print("setting state");
-
-			this.news = parsedResponse["data"];				
-
-			Navigator.pushReplacementNamed
-			(
-				context, "home", 
-				arguments: 
+			setState(() 
+			{
+				this.news = parsedResponse["data"];
+				
+				this.news.forEach((article)
 				{
-					"news": this.news,
-					"randomIndex": randomIndex
-				}
-			);
-		}	
+					print(article["_source"]["category"]);
+
+					switch(article["_source"]["category"])
+					{
+						case "health":
+							this.health.add(article["_source"]);break;
+						case "business":
+							this.business.add(article["_source"]);break;
+						case "entertainment":
+							this.entertainment.add(article["_source"]);break;
+						case "sports":
+							this.sports.add(article["_source"]);break;
+						case "headlines":
+							this.headlines.add(article["_source"]);break;
+						case "technology":
+							this.technology.add(article["_source"]);break;
+						case "science":
+							this.science.add(article["_source"]);break;
+					}
+				});
+
+				Navigator.pushReplacementNamed
+				(
+					context, "home", 
+					arguments: 
+					{
+						"news": this.news,
+						"headlines": this.headlines,
+						"health": this.health,
+						"business": this.business,
+						"sports": this.sports,
+						"technology": this.technology,
+						"science": this.science,
+						"entertainment": this.entertainment,
+						"randomIndex": randomIndex
+					}
+				);
+			});
+		}		
 	}	
 }
 

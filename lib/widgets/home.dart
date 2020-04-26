@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:math';
+// import 'dart:math';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -26,7 +26,15 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 	int randomIndex = 0;
 
-	List <dynamic> news = [{"_source":{"title":"abc", "description": "abc", "author": "abc", "publishedAt": "2020-04-04T22:25:05Z", "urlToImage": "https://www.teliacompany.com/Assets/Images/not-available.png"}}];
+	List <dynamic> news = [{"_source":{"title":"abc", "description": "abc", "author": "abc", "publishedAt": "2020-04-04T22:25:05Z", "urlToImage": "https://www.teliacompany.com/Assets/Images/not-available.png"}}];	
+	
+	List<dynamic> health = [];
+	List<dynamic> business = [];
+	List<dynamic> headlines = [];
+	List<dynamic> entertainment = [];
+	List<dynamic> technology = [];
+	List<dynamic> science = [];
+	List<dynamic> sports = [];
 
 	void initState()
 	{
@@ -34,8 +42,10 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 		WidgetsBinding.instance.addPostFrameCallback((_)
 		{
-			firebaseInitialize();			
+			firebaseInitialize();	
+			fetchNews();		
 		});
+
 	}
 
 	Widget build(BuildContext context)
@@ -47,157 +57,133 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 			this.news = arguments["news"];
 			this.randomIndex = arguments["randomIndex"];
 
+			this.headlines = arguments["headlines"];
+			this.business = arguments["business"];
+			this.health = arguments["health"];
+			this.entertainment = arguments["entertainment"];
+			this.technology = arguments["technology"];
+			this.science = arguments["science"];
+			this.sports = arguments["sports"];
+
 			this.firstTitle = this.news[randomIndex]["_source"]["title"];
 			this.firstDate = this.news[randomIndex]["_source"]["publishedAt"];
 			this.firstPic = this.news[randomIndex]["_source"]["urlToImage"] == null? "https://www.teliacompany.com/Assets/Images/not-available.png": this.news[randomIndex]["_source"]["urlToImage"];
 		});
 
-		return 
-		(
-			Scaffold
+		return MaterialApp
+		(		
+			debugShowCheckedModeBanner: false,		
+			home: DefaultTabController
 			(
-				appBar: AppBar
+				length: 7,				
+				child: Scaffold
 				(
-					title: Row
+					appBar: PreferredSize
 					(
-						mainAxisAlignment: MainAxisAlignment.spaceBetween,
-						children: 
-						[							
-							Text("Headlines", style: TextStyle(color: Colors.red)),
-							FlatButton
-							(
-								child: Icon(Icons.refresh, color: Colors.red),
-								onPressed: () async
-								{
-									await fetchNews();
-								}
-							)
-						],
-					),
-					backgroundColor: Colors.white,
-					
-				),
-				body: Container
-				(
-					padding: EdgeInsets.all(10),
-					child: Column
-					(
-						crossAxisAlignment: CrossAxisAlignment.start,
-						children: 
-						[
-							GestureDetector
-							(
-								child: Container
-								(										
-									height: 250.0,			
-									margin: EdgeInsets.only(bottom: 10.0),					
-									child: Card
-									(									
-										semanticContainer: true,																							
-										child: Container
-										(										
-											decoration: BoxDecoration
-											(
-												image: DecorationImage
-												(
-													image: NetworkImage(this.firstPic),
-													fit: BoxFit.cover
-												),
-											),
-											padding: EdgeInsets.all(10),
-											child: Column
-											(
-												crossAxisAlignment: CrossAxisAlignment.start,
-												children: 
-												[																				
-													Text
-													(
-														this.firstTitle, style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.white),													
-													),
-													Container(margin: EdgeInsets.only(top:5)),
-													Text(" " + DateFormat("dd-MMM-y").format(DateTime.parse(this.firstDate)) + " ", style: TextStyle(color: Colors.white, backgroundColor: Colors.redAccent))
-												]
-											)
-										)
+						preferredSize: Size.fromHeight(80),
+						child: AppBar
+						(
+							title: Row
+							(								
+								mainAxisAlignment: MainAxisAlignment.spaceBetween,
+								children: 
+								[							
+									Text("Minutes", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+									IconButton
+									(				
+										alignment: Alignment.centerRight,
+										icon: Icon(Icons.refresh, color: Colors.red),
+										onPressed: () async
+										{
+											await fetchNews();
+										}
 									)
-								),
-								onTap: () async
-								{
-									await Store.store.setString("title", this.news[randomIndex]["_source"]["title"]);
-									await Store.store.setString("description", this.news[randomIndex]["_source"]["description"]);
-									await Store.store.setString("created", this.news[randomIndex]["_source"]["publishedAt"]);
-									await Store.store.setString("pic", this.news[randomIndex]["_source"]["urlToImage"]);
-									await Store.store.setString("author", this.news[randomIndex]["_source"]["author"]);
-									await Store.store.setString("content", this.news[randomIndex]["_source"]["content"]);
-									await Store.store.setString("url", this.news[randomIndex]["_source"]["url"]);
-
-									Navigator.pushNamed(context, "details");
-								},
+									
+									// FlatButton
+									// (
+									// 	child: Icon(Icons.category, color: Colors.red),
+									// 	onPressed: () 
+									// 	{
+									// 		Navigator.pushNamed(context, "categories");
+									// 	}
+									// )
+								]
 							),
-							Expanded
-							(							
-								child: Container
-								(																											
-									child: ListView.builder
-									(									
-										itemCount: this.news.length,										
-										itemBuilder: (context, index)
-										{							
-											return Column
-											(
-												children: 
-												[
-													ListTile
-													(												
-														dense: true,
-														contentPadding: EdgeInsets.only(right:5.0, bottom: 5.0, top: 5.0),
-														leading: CircleAvatar
-														(
-															backgroundImage: NetworkImage(this.news[index]["_source"]["urlToImage"]),
-															radius: 25,
-														) ,
-														title: Text(this.news[index]["_source"]["title"],style: TextStyle(fontFamily: "comic-sans", fontSize: 15.0)),
-														isThreeLine: true,
-														subtitle: Column
-														(
-															crossAxisAlignment: CrossAxisAlignment.start,
-															children: 
-															[
-																Container(margin: EdgeInsets.only(top:5.0)),														
-																Text(DateFormat("dd-MMM-y H:m").format(DateTime.parse(this.news[index]["_source"]["publishedAt"])),style: TextStyle(fontSize: 12.0))
-															]
-														),
-														onTap: () async
-														{
-															await Store.store.setString("title", this.news[index]["_source"]["title"]);
-															await Store.store.setString("description", this.news[index]["_source"]["description"]);
-															await Store.store.setString("created", this.news[index]["_source"]["publishedAt"]);
-															await Store.store.setString("pic", this.news[index]["_source"]["urlToImage"]);
-															await Store.store.setString("author", this.news[index]["_source"]["author"]);
-															await Store.store.setString("content", this.news[index]["_source"]["content"]);
-															await Store.store.setString("url", this.news[index]["_source"]["url"]);
-
-															Navigator.pushNamed(context, "details");
-														},
-													),
-													Divider(color: Colors.grey)
-												],
-											);											
-										}	
+							bottom: TabBar
+							(	
+								indicatorColor: Colors.redAccent,	
+								indicatorWeight: 4,					
+								indicatorSize: TabBarIndicatorSize.tab,
+								unselectedLabelColor: Colors.grey,
+								labelColor: Colors.red,
+								isScrollable: true,
+								tabs: 
+								[
+									Container
+									(
+										padding: EdgeInsets.only(bottom: 10, top:10),
+										child: Text("Headlines"),
 									),
-								)
-							)					
+									Container
+									(
+										padding: EdgeInsets.only(bottom: 10, top:10),
+										child: Text("Health"),
+									),
+									Container
+									(
+										padding: EdgeInsets.only(bottom: 10, top:10),
+										child: Text("Business"),
+									),
+									Container
+									(
+										padding: EdgeInsets.only(bottom: 10, top:10),
+										child: Text("Sports"),
+									),
+									Container
+									(
+										padding: EdgeInsets.only(bottom: 10, top:10),
+										child: Text("Technology"),
+									),
+									Container
+									(
+										padding: EdgeInsets.only(bottom: 10, top:10),
+										child: Text("Science"),
+									),
+									Container
+									(
+										padding: EdgeInsets.only(bottom: 10, top:10),
+										child: Text("Entertainment"),
+									)
+								]
+							),
+							backgroundColor: Colors.white,
+						)
+					),
+					body: TabBarView
+					(
+						children: 
+						[			
+							this.tabSection(this.headlines, context),
+							this.tabSection(this.health, context),
+							this.tabSection(this.business, context),
+							this.tabSection(this.sports, context),
+							this.tabSection(this.technology, context),
+							this.tabSection(this.science, context),
+							this.tabSection(this.entertainment, context)
 						],
-					)
-				)				
+					),						
+				),
 			)
 		);
 	}
-
+	
 	fetchNews({bool showLoader = true}) async
 	{
+		print("Fetch news");
+
 		if (Store.store.getString("splashed") == "1")
 		{
+			print("Returned");
 			await Store.store.setString("splashed", "0");
 			return(0);
 		}
@@ -217,12 +203,12 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 		var response = await apiClient.post(url, body);
 		var parsedResponse = jsonDecode(response);
 
-		print(parsedResponse);
+		// print(parsedResponse);
 
 		if(parsedResponse["status"] == 200)
 		{
-			var range = new Random();
-			randomIndex = range.nextInt(10);
+			// var range = new Random();
+			// randomIndex = range.nextInt(10);
 
 			setState(() 
 			{
@@ -230,9 +216,34 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 				this.firstTitle = parsedResponse["data"][randomIndex]["_source"]["title"];
 				this.firstDate = parsedResponse["data"][randomIndex]["_source"]["publishedAt"];
-				this.firstPic = parsedResponse["data"][randomIndex]["_source"]["urlToImage"] == null? "https://www.teliacompany.com/Assets/Images/not-available.png": parsedResponse["data"][randomIndex]["_source"]["urlToImage"];
+				this.firstPic = parsedResponse["data"][randomIndex]["_source"]["urlToImage"] == null? "https://www.teliacompany.com/Assets/Images/not-available.png": parsedResponse["data"][randomIndex]["_source"]["urlToImage"];		
+
+				this.news.forEach((article)
+				{
+					print(article["_source"]["category"]);
+
+					switch(article["_source"]["category"])
+					{
+						case "health":
+							this.health.add(article["_source"]);break;
+						case "business":
+							this.business.add(article["_source"]);break;
+						case "entertainment":
+							this.entertainment.add(article["_source"]);break;
+						case "sports":
+							this.sports.add(article["_source"]);break;
+						case "headlines":
+							this.headlines.add(article["_source"]);break;
+						case "technology":
+							this.technology.add(article["_source"]);break;
+						case "science":
+							this.science.add(article["_source"]);break;
+					}
+				});
 			});
 		}
+
+		print(this.headlines);
 
 		if (showLoader)
 		{
@@ -296,5 +307,138 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 		);
 
 		firebaseMessaging.subscribeToTopic("news");
+	}	
+
+	Widget tabSection(List<dynamic> data, BuildContext bcontext)
+	{
+		int randomIndex = 0;
+
+		if (data.length != 0)
+		{
+			return 
+			(
+				Container
+				(
+					padding: EdgeInsets.all(10),
+					child: Column
+					(
+						crossAxisAlignment: CrossAxisAlignment.start,
+						children: 
+						[
+							GestureDetector
+							(
+								child: Container
+								(										
+									height: 250.0,			
+									margin: EdgeInsets.only(bottom: 10.0),					
+									child: Card
+									(									
+										semanticContainer: true,																							
+										child: Container
+										(										
+											decoration: BoxDecoration
+											(
+												image: DecorationImage
+												(
+													image: NetworkImage(data[randomIndex]["urlToImage"] != null? (data[randomIndex]["urlToImage"]):("https://www.publicdomainpictures.net/pictures/280000/nahled/not-found-image-15383864787lu.jpg")),
+													fit: BoxFit.cover
+												),
+											),
+											padding: EdgeInsets.all(10),
+											child: Column
+											(
+												crossAxisAlignment: CrossAxisAlignment.start,
+												children: 
+												[																				
+													Text
+													(
+														data[randomIndex]["title"], style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.white),													
+													),
+													Container(margin: EdgeInsets.only(top:5)),
+													Text(" " + DateFormat("dd-MMM-y").format(DateTime.parse(data[randomIndex]["publishedAt"])) + " ", style: TextStyle(color: Colors.white, backgroundColor: Colors.redAccent))
+												]
+											)
+										)
+									)
+								),
+								onTap: () async
+								{
+									await Store.store.setString("title", data[randomIndex]["title"]);
+									await Store.store.setString("description", data[randomIndex]["description"]);
+									await Store.store.setString("created", data[randomIndex]["publishedAt"]);
+									await Store.store.setString("pic", data[randomIndex]["urlToImage"]);
+									await Store.store.setString("author", data[randomIndex]["author"]);
+									await Store.store.setString("content", data[randomIndex]["content"]);
+									await Store.store.setString("url", data[randomIndex]["url"]);
+
+									Navigator.pushNamed(bcontext, "details");
+								},
+							),
+							Expanded
+							(
+								child: Container
+								(																											
+									child: ListView.builder
+									(									
+										itemCount: data.length,
+										itemBuilder: (context, index)
+										{							
+											return Column
+											(
+												children: 
+												[
+													ListTile
+													(												
+														dense: true,
+														contentPadding: EdgeInsets.only(right:5.0, bottom: 5.0, top: 5.0),
+														leading: CircleAvatar
+														(
+															backgroundImage: NetworkImage(data[randomIndex]["urlToImage"]!=null?data[randomIndex]["urlToImage"]:"https://www.publicdomainpictures.net/pictures/280000/nahled/not-found-image-15383864787lu.jpg"),
+
+															radius: 25,
+														) ,
+														title: Text(data[index]["title"],style: TextStyle(fontFamily: "comic-sans", fontSize: 15.0)),
+														isThreeLine: true,
+														subtitle: Column
+														(
+															crossAxisAlignment: CrossAxisAlignment.start,
+															children: 
+															[
+																Container(margin: EdgeInsets.only(top:5.0)),														
+																Text(DateFormat("dd-MMM-y H:m").format(DateTime.parse(data[index]["publishedAt"])),style: TextStyle(fontSize: 12.0))
+															]
+														),
+														onTap: () async
+														{
+															await Store.store.setString("title", data[index]["title"]);
+															await Store.store.setString("description", data[index]["description"]);
+															await Store.store.setString("created", data[index]["publishedAt"]);
+															await Store.store.setString("pic", data[index]["urlToImage"]);
+															await Store.store.setString("author", data[index]["author"]);
+															await Store.store.setString("content", data[index]["content"]);
+															await Store.store.setString("url", data[index]["url"]);
+
+															Navigator.pushNamed(bcontext, "details");
+														},
+													),
+													Divider(color: Colors.grey)
+												],
+											);											
+										}	
+									),
+								)
+							)					
+						],
+					)								
+				)
+			);
+		}
+		else 
+		{
+			return
+			(
+				Container()
+			);
+		}		
 	}
 }

@@ -42,7 +42,7 @@ class NewsDetailsState extends State<NewsDetails>
 			this.title = Store.store.getString("title") == null? ("NA"): (Store.store.getString("title"));
 			this.author = Store.store.getString("author") == null? ("NA"): (Store.store.getString("author"));
 			this.created = Store.store.getString("created") == null? ("NA"): (DateFormat("dd-MMM-y").format(DateTime.parse(Store.store.getString("created"))));
-			this.pic = Store.store.getString("pic") == null? ("NA"): (Store.store.getString("pic"));
+			this.pic = Store.store.getString("pic") == null? ("https://www.publicdomainpictures.net/pictures/280000/nahled/not-found-image-15383864787lu.jpg"): (Store.store.getString("pic"));
 			this.description = Store.store.getString("description") == null? ("NA"): (Store.store.getString("description"));
 			this.content = Store.store.getString("content") == null? ("NA"): (Store.store.getString("content"));
 			this.url = Store.store.getString("url") == null? ("NA"): (Store.store.getString("url"));
