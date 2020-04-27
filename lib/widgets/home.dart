@@ -379,51 +379,61 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 								child: Container
 								(																											
 									child: ListView.builder
-									(									
+									(
 										itemCount: data.length,
 										itemBuilder: (context, index)
-										{							
-											return Column
-											(
-												children: 
-												[
-													ListTile
-													(												
-														dense: true,
-														contentPadding: EdgeInsets.only(right:5.0, bottom: 5.0, top: 5.0),
-														leading: CircleAvatar
-														(
-															backgroundImage: NetworkImage(data[randomIndex]["urlToImage"]!=null?data[randomIndex]["urlToImage"]:"https://www.publicdomainpictures.net/pictures/280000/nahled/not-found-image-15383864787lu.jpg"),
+										{	
+											if (index != 0)										
+											{
+												return Column
+												(
+													children: 
+													[
+														ListTile
+														(												
+															dense: true,
+															contentPadding: EdgeInsets.only(right:5.0, bottom: 5.0, top: 5.0),
+															leading: CircleAvatar
+															(
+																backgroundImage: NetworkImage(data[index]["urlToImage"]!=null?data[index]["urlToImage"]:"https://www.publicdomainpictures.net/pictures/280000/nahled/not-found-image-15383864787lu.jpg"),
 
-															radius: 25,
-														) ,
-														title: Text(data[index]["title"],style: TextStyle(fontFamily: "comic-sans", fontSize: 15.0)),
-														isThreeLine: true,
-														subtitle: Column
-														(
-															crossAxisAlignment: CrossAxisAlignment.start,
-															children: 
-															[
-																Container(margin: EdgeInsets.only(top:5.0)),														
-																Text(DateFormat("dd-MMM-y H:m").format(DateTime.parse(data[index]["publishedAt"])),style: TextStyle(fontSize: 12.0))
-															]
+																radius: 25,
+															) ,
+															title: Text(data[index]["title"],style: TextStyle(fontFamily: "comic-sans", fontSize: 15.0)),
+															isThreeLine: true,
+															subtitle: Column
+															(
+																crossAxisAlignment: CrossAxisAlignment.start,
+																children: 
+																[
+																	Container(margin: EdgeInsets.only(top:5.0)),														
+																	Text(DateFormat("dd-MMM-y H:m").format(DateTime.parse(data[index]["publishedAt"])),style: TextStyle(fontSize: 12.0))
+																]
+															),
+															onTap: () async
+															{
+																await Store.store.setString("title", data[index]["title"]);
+																await Store.store.setString("description", data[index]["description"]);
+																await Store.store.setString("created", data[index]["publishedAt"]);
+																await Store.store.setString("pic", data[index]["urlToImage"]);
+																await Store.store.setString("author", data[index]["author"]);
+																await Store.store.setString("content", data[index]["content"]);
+																await Store.store.setString("url", data[index]["url"]);
+
+																Navigator.pushNamed(bcontext, "details");
+															},
 														),
-														onTap: () async
-														{
-															await Store.store.setString("title", data[index]["title"]);
-															await Store.store.setString("description", data[index]["description"]);
-															await Store.store.setString("created", data[index]["publishedAt"]);
-															await Store.store.setString("pic", data[index]["urlToImage"]);
-															await Store.store.setString("author", data[index]["author"]);
-															await Store.store.setString("content", data[index]["content"]);
-															await Store.store.setString("url", data[index]["url"]);
+														Divider(color: Colors.grey)
+													],
+												);
+											}
+											else 
+											{
+												return Column
+												(
 
-															Navigator.pushNamed(bcontext, "details");
-														},
-													),
-													Divider(color: Colors.grey)
-												],
-											);											
+												);
+											}
 										}	
 									),
 								)
