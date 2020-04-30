@@ -95,7 +95,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 									[ 										
 										Container
 										(											
-											
+											margin: EdgeInsets.only(left: 10),
 											child: Text("Minutes", style: TextStyle(color: Colors.red)),
 										),
 										Expanded
@@ -128,7 +128,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 												icon: Icon(Icons.search, color: Colors.red),
 												onPressed: () 
 												{
-													this.search(searchController.text, context);
+													this.search(searchController.text.trim(), context);
 												}
 											),
 										)
@@ -204,12 +204,15 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
  	search(String searchText, BuildContext context) async
 	{
-		bool showLoader = true;
-
-		if (showLoader)
+		// If the user hasn't typed anything or has pressed spaces a couple of times.
+		if (searchText == "")
 		{
-			showDialog(context: context, barrierDismissible: false, builder: (BuildContext context) => Loader("Searching news"));
+			print("Empty Search");
+			return(0);
 		}
+
+		showDialog(context: context, barrierDismissible: false, builder: (BuildContext context) => Loader("Searching news"));
+
 		Api apiClient = Api();
 
 		String url = this.prefixUrl + "/search/";
@@ -225,6 +228,8 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 		var news = parsedResponse["data"];
 
 		print(parsedResponse);
+
+		Navigator.pop(context);
 
 		if (parsedResponse["status"] == 200)
 		{
@@ -390,13 +395,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 					(
 						crossAxisAlignment: CrossAxisAlignment.start,
 						children: 
-						[
-							// Container
-							// (
-							// 	height: 80,
-							// 	// color: Colors.blue,
-							// 	child: SearchBar(onSearch: null, onItemFound: null),
-							// ),
+						[							
 							GestureDetector
 							(
 								child: Container
