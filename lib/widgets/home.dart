@@ -8,6 +8,7 @@ import 'package:newsapp/api.dart';
 import 'package:toast/toast.dart';
 import 'loader.dart';
 
+
 class Home extends StatefulWidget
 {
 	createState()
@@ -15,6 +16,7 @@ class Home extends StatefulWidget
 		return HomeState();
 	}
 }
+
 
 class HomeState extends State<Home> with WidgetsBindingObserver
 {
@@ -36,6 +38,8 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 	List<dynamic> science = [];
 	List<dynamic> sports = [];
 
+	bool isSearching = false;
+	
 	void initState()
 	{
 		super.initState();		
@@ -51,6 +55,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 	Widget build(BuildContext context)
 	{
 		final Map arguments = ModalRoute.of(context).settings.arguments as Map;
+		TextEditingController searchController = TextEditingController();
 		
 		setState(() 
 		{			
@@ -77,38 +82,59 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 			(
 				length: 7,				
 				child: Scaffold
-				(
-					appBar: PreferredSize
-					(
-						preferredSize: Size.fromHeight(80),
-						child: AppBar
+				(					
+					appBar: AppBar
 						(
-							title: Row
+							titleSpacing: 0,							
+							title: Container
 							(								
-								mainAxisAlignment: MainAxisAlignment.spaceBetween,
-								children: 
-								[							
-									Text("Minutes", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-									IconButton
-									(				
-										alignment: Alignment.centerRight,
-										icon: Icon(Icons.refresh, color: Colors.red),
-										onPressed: () async
-										{
-											await fetchNews();
-										}
-									)
-									
-									// FlatButton
-									// (
-									// 	child: Icon(Icons.category, color: Colors.red),
-									// 	onPressed: () 
-									// 	{
-									// 		Navigator.pushNamed(context, "categories");
-									// 	}
-									// )
-								]
-							),
+								height: 80,								
+								child: Row
+								(
+									children:
+									[ 										
+										Container
+										(											
+											
+											child: Text("Minutes", style: TextStyle(color: Colors.red)),
+										),
+										Expanded
+										(											
+											child: Container
+											(	
+												color: Colors.grey[100],	
+												margin: EdgeInsets.only(left:8),																			
+												child: TextField
+												(
+													controller: searchController,
+													decoration: InputDecoration
+													(
+														contentPadding: EdgeInsets.only(left:10),
+														hintText: "Search Topics",
+														border: InputBorder.none,
+													),
+													
+												),
+											)
+										), 		
+										Container
+										(
+											margin: EdgeInsets.only(right: 10),
+											color: Colors.grey[100],
+											width: 40,
+											child: IconButton
+											(												
+												splashColor: Colors.white,
+												icon: Icon(Icons.search, color: Colors.red),
+												onPressed: () 
+												{
+													this.search(searchController.text, context);
+												}
+											),
+										)
+									]
+								)
+							),														
 							bottom: TabBar
 							(	
 								indicatorColor: Colors.redAccent,	
@@ -157,8 +183,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 								]
 							),
 							backgroundColor: Colors.white,
-						)
-					),
+						),					
 					body: TabBarView
 					(
 						children: 
@@ -171,10 +196,51 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 							this.tabSection(this.science, context),
 							this.tabSection(this.entertainment, context)
 						],
-					),						
+					),	
 				),
 			)
 		);
+	}
+
+ 	search(String searchText, BuildContext context) async
+	{
+		bool showLoader = true;
+
+		if (showLoader)
+		{
+			showDialog(context: context, barrierDismissible: false, builder: (BuildContext context) => Loader("Searching news"));
+		}
+		Api apiClient = Api();
+
+		String url = this.prefixUrl + "/search/";
+
+		Map body = 
+		{
+			"search": searchText
+		};
+
+		var response = await apiClient.post(url, body);
+		var parsedResponse = jsonDecode(response);
+	
+		var news = parsedResponse["data"];
+
+		print(parsedResponse);
+
+		if (parsedResponse["status"] == 200)
+		{
+			print(news);
+
+			Navigator.pushNamed
+			(
+				context, 
+				"result",
+				arguments: 
+				{
+					"results": news, 
+					"searchedText": searchText
+				}
+			);
+		}
 	}
 	
 	fetchNews({bool showLoader = true}) async
@@ -325,6 +391,12 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 						crossAxisAlignment: CrossAxisAlignment.start,
 						children: 
 						[
+							// Container
+							// (
+							// 	height: 80,
+							// 	// color: Colors.blue,
+							// 	child: SearchBar(onSearch: null, onItemFound: null),
+							// ),
 							GestureDetector
 							(
 								child: Container
@@ -441,4 +513,5 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 			);
 		}		
 	}
+	
 }

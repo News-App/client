@@ -5,6 +5,7 @@ import 'package:newsapp/api.dart';
 import 'package:newsapp/widgets/categories.dart';
 import 'package:newsapp/widgets/home.dart';
 import 'package:newsapp/widgets/news_details.dart';
+import 'package:newsapp/widgets/result.dart';
 
 void main() 
 {
@@ -19,7 +20,8 @@ void main()
 			"home": (context) => Home(),
 			"details": (context) => NewsDetails(),
 			"categories": (context) => Categories(),
-		}		
+			"result": (context) => Result()
+		}
 	));
 }
 
