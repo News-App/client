@@ -24,8 +24,24 @@ class Result extends StatelessWidget
 					),
 					body: Container
 					(
+						color: Colors.white,
 						margin: EdgeInsets.only(top:13),
-						child: ListView.builder
+						child: 
+						news.length == 0 ? 
+						Container
+						(														
+							padding: EdgeInsets.all(80),
+							child: Column
+							(			
+								crossAxisAlignment: CrossAxisAlignment.center,					
+								children:
+								[
+									Icon(Icons.search, size: 150, color: Colors.grey[300]),
+									Text("Opps we couldn't find anything related to that. Please refine and try again!", textAlign: TextAlign.center, style: TextStyle(fontSize: 20, color: Colors.grey[500])),
+								]
+							)
+						): 
+						ListView.builder
 						(
 							itemCount: news.length,
 							itemBuilder: (context, index)
@@ -33,9 +49,7 @@ class Result extends StatelessWidget
 								return
 								(
 									Container
-									(
-										// padding: EdgeInsets.only(top:18),
-										// height: 65,
+									(										
 										child:Column
 										(
 											children:
