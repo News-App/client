@@ -6,6 +6,7 @@ import 'package:newsapp/widgets/categories.dart';
 import 'package:newsapp/widgets/home.dart';
 import 'package:newsapp/widgets/news_details.dart';
 import 'package:newsapp/widgets/result.dart';
+import 'package:newsapp/widgets/search_page.dart';
 
 void main() 
 {
@@ -20,7 +21,8 @@ void main()
 			"home": (context) => Home(),
 			"details": (context) => NewsDetails(),
 			"categories": (context) => Categories(),
-			"result": (context) => Result()
+			"result": (context) => Result(),
+			"search": (context) => SearchPage()
 		}
 	));
 }

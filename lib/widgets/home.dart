@@ -197,8 +197,17 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 							this.tabSection(this.entertainment, context)
 						],
 					),	
+					floatingActionButton: FloatingActionButton
+					(
+						backgroundColor: Colors.redAccent,
+						onPressed: () 
+						{
+							Navigator.pushNamed(context, "search");
+						},
+						child: Icon(Icons.search),
+					),
 				),
-			)
+			),		
 		);
 	}
 
