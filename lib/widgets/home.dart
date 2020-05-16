@@ -530,6 +530,5 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 				Container()
 			);
 		}		
-	}
-	
+	}	
 }
