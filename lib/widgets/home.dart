@@ -443,6 +443,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 								),
 								onTap: () async
 								{
+									await Store.store.setString("source", data[randomIndex]["source"]["name"]);
 									await Store.store.setString("title", data[randomIndex]["title"]);
 									await Store.store.setString("description", data[randomIndex]["description"]);
 									await Store.store.setString("created", data[randomIndex]["publishedAt"]);
@@ -492,6 +493,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 															),
 															onTap: () async
 															{
+																await Store.store.setString("source", data[index]["source"]["name"]);
 																await Store.store.setString("title", data[index]["title"]);
 																await Store.store.setString("description", data[index]["description"]);
 																await Store.store.setString("created", data[index]["publishedAt"]);
