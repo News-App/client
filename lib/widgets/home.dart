@@ -1,13 +1,16 @@
 import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:newsapp/Store.dart';
 import 'package:newsapp/api.dart';
 import 'package:newsapp/config.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:toast/toast.dart';
 import 'loader.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 
 class Home extends StatefulWidget
@@ -29,8 +32,8 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 	int randomIndex = 0;
 
-	List <dynamic> news = [{"_source":{"title":"abc", "description": "abc", "author": "abc", "publishedAt": "2020-04-04T22:25:05Z", "urlToImage": "https://www.teliacompany.com/Assets/Images/not-available.png"}}];	
-	
+	List <dynamic> news = [{"_source":{"title":"abc", "description": "abc", "author": "abc", "publishedAt": "2020-04-04T22:25:05Z", "urlToImage": "https://www.teliacompany.com/Assets/Images/not-available.png"}}];
+
 	List<dynamic> health = [];
 	List<dynamic> business = [];
 	List<dynamic> headlines = [];
@@ -40,15 +43,21 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 	List<dynamic> sports = [];
 
 	bool isSearching = false;
-	
+
 	void initState()
 	{
-		super.initState();		
+		super.initState();
+
+		SystemChrome.setPreferredOrientations(
+			[
+				DeviceOrientation.portraitUp
+			]
+		);
 
 		WidgetsBinding.instance.addPostFrameCallback((_)
 		{
-			firebaseInitialize();	
-			fetchNews();		
+			firebaseInitialize();
+			fetchNews();
 		});
 
 	}
@@ -57,9 +66,9 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 	{
 		final Map arguments = ModalRoute.of(context).settings.arguments as Map;
 		TextEditingController searchController = TextEditingController();
-		
-		setState(() 
-		{			
+
+		setState(()
+		{
 			this.news = arguments["news"];
 			this.randomIndex = arguments["randomIndex"];
 
@@ -77,118 +86,119 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 		});
 
 		return MaterialApp
-		(		
-			debugShowCheckedModeBanner: false,		
+		(
+			debugShowCheckedModeBanner: false,
 			home: DefaultTabController
 			(
-				length: 7,				
+				length: 7,
 				child: Scaffold
-				(					
+				(
+					backgroundColor: Colors.white,
 					appBar: AppBar
+					(
+						titleSpacing: 0,
+						title: Container
 						(
-							titleSpacing: 0,							
-							title: Container
-							(								
-								height: 80,								
-								child: Row
-								(
-									children:
-									[ 										
-										Container
-										(											
-											margin: EdgeInsets.only(left: 10),
-											child: Text("Minutes", style: TextStyle(color: Color(int.parse(logoColor)))),
-										),
-										Expanded
-										(											
-											child: Container
-											(	
-												color: Colors.grey[100],	
-												margin: EdgeInsets.only(left:8),																			
-												child: TextField
-												(
-													controller: searchController,
-													decoration: InputDecoration
-													(
-														contentPadding: EdgeInsets.only(left:10),
-														hintText: "Search Topics",
-														border: InputBorder.none,
-													),
-													
-												),
-											)
-										), 		
-										Container
-										(
-											margin: EdgeInsets.only(right: 10),
-											color: Colors.grey[100],
-											width: 40,
-											child: IconButton
-											(												
-												splashColor: Colors.white,
-												icon: Icon(Icons.search, color: Colors.red),
-												onPressed: () 
-												{
-													this.search(searchController.text.trim(), context);
-												}
-											),
-										)
-									]
-								)
-							),														
-							bottom: TabBar
-							(	
-								indicatorColor: Colors.redAccent,
-								indicatorWeight: 4,
-								indicatorSize: TabBarIndicatorSize.tab,
-								unselectedLabelColor: Colors.grey,
-								labelColor: Colors.red,
-								isScrollable: true,
-								tabs:
+							height: 80,
+							child: Row
+							(
+								children:
 								[
 									Container
 									(
-										padding: EdgeInsets.only(bottom: 10, top:10),
-										child: Text("Headlines"),
+										margin: EdgeInsets.only(left: 10),
+										child: Text("Minutes", style: TextStyle(color: Color(int.parse(logoColor)))),
+									),
+									Expanded
+									(
+										child: Container
+										(
+											color: Colors.grey[100],
+											margin: EdgeInsets.only(left:8),
+											child: TextField
+											(
+												controller: searchController,
+												decoration: InputDecoration
+												(
+													contentPadding: EdgeInsets.only(left:10),
+													hintText: "Search Topics",
+													border: InputBorder.none,
+												),
+
+											),
+										)
 									),
 									Container
 									(
-										padding: EdgeInsets.only(bottom: 10, top:10),
-										child: Text("Health"),
-									),
-									Container
-									(
-										padding: EdgeInsets.only(bottom: 10, top:10),
-										child: Text("Business"),
-									),
-									Container
-									(
-										padding: EdgeInsets.only(bottom: 10, top:10),
-										child: Text("Sports"),
-									),
-									Container
-									(
-										padding: EdgeInsets.only(bottom: 10, top:10),
-										child: Text("Technology"),
-									),
-									Container
-									(
-										padding: EdgeInsets.only(bottom: 10, top:10),
-										child: Text("Science"),
-									),
-									Container
-									(
-										padding: EdgeInsets.only(bottom: 10, top:10),
-										child: Text("Entertainment"),
+										margin: EdgeInsets.only(right: 10),
+										color: Colors.grey[100],
+										width: 40,
+										child: IconButton
+										(
+											splashColor: Colors.white,
+											icon: Icon(Icons.search, color: Colors.red),
+											onPressed: ()
+											{
+												this.search(searchController.text.trim(), context);
+											}
+										),
 									)
 								]
-							),
-							backgroundColor: Colors.white,
-						),					
+							)
+						),
+						bottom: TabBar
+						(
+							indicatorColor: Colors.redAccent,
+							indicatorWeight: 4,
+							indicatorSize: TabBarIndicatorSize.tab,
+							unselectedLabelColor: Colors.grey,
+							labelColor: Colors.red,
+							isScrollable: true,
+							tabs:
+							[
+								Container
+								(
+									padding: EdgeInsets.only(bottom: 10, top:10),
+									child: Text("Headlines"),
+								),
+								Container
+								(
+									padding: EdgeInsets.only(bottom: 10, top:10),
+									child: Text("Health"),
+								),
+								Container
+								(
+									padding: EdgeInsets.only(bottom: 10, top:10),
+									child: Text("Business"),
+								),
+								Container
+								(
+									padding: EdgeInsets.only(bottom: 10, top:10),
+									child: Text("Sports"),
+								),
+								Container
+								(
+									padding: EdgeInsets.only(bottom: 10, top:10),
+									child: Text("Technology"),
+								),
+								Container
+								(
+									padding: EdgeInsets.only(bottom: 10, top:10),
+									child: Text("Science"),
+								),
+								Container
+								(
+									padding: EdgeInsets.only(bottom: 10, top:10),
+									child: Text("Entertainment"),
+								)
+							]
+						),
+						backgroundColor: Colors.white,
+					),
 					body: TabBarView
 					(
-						children: 
-						[			
+						children:
+						[
 							this.tabSection(this.headlines, context),
 							this.tabSection(this.health, context),
 							this.tabSection(this.business, context),
@@ -197,18 +207,18 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 							this.tabSection(this.science, context),
 							this.tabSection(this.entertainment, context)
 						],
-					),	
+					),
 					floatingActionButton: FloatingActionButton
 					(
 						backgroundColor: Colors.redAccent,
-						onPressed: () 
+						onPressed: ()
 						{
 							Navigator.pushNamed(context, "search");
 						},
 						child: Icon(Icons.search),
 					),
 				),
-			),		
+			),
 		);
 	}
 
@@ -227,14 +237,14 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 		String url = this.prefixUrl + "/search/";
 
-		Map body = 
+		Map body =
 		{
 			"search": searchText
 		};
 
 		var response = await apiClient.post(url, body);
 		var parsedResponse = jsonDecode(response);
-	
+
 		var news = parsedResponse["data"];
 
 		print(parsedResponse);
@@ -247,17 +257,17 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 			Navigator.pushNamed
 			(
-				context, 
+				context,
 				"result",
-				arguments: 
+				arguments:
 				{
-					"results": news, 
+					"results": news,
 					"searchedText": searchText
 				}
 			);
 		}
 	}
-	
+
 	fetchNews({bool showLoader = true}) async
 	{
 		print("Fetch news");
@@ -275,7 +285,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 		}
 
 		Api apiClient = Api();
-		await Store.init();		
+		await Store.init();
 
 		String url = this.prefixUrl + "/headlines/fetch";
 
@@ -291,13 +301,13 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 			// var range = new Random();
 			// randomIndex = range.nextInt(10);
 
-			setState(() 
+			setState(()
 			{
 				this.news = parsedResponse["data"];
 
 				this.firstTitle = parsedResponse["data"][randomIndex]["_source"]["title"];
 				this.firstDate = parsedResponse["data"][randomIndex]["_source"]["publishedAt"];
-				this.firstPic = parsedResponse["data"][randomIndex]["_source"]["urlToImage"] == null? "https://www.teliacompany.com/Assets/Images/not-available.png": parsedResponse["data"][randomIndex]["_source"]["urlToImage"];		
+				this.firstPic = parsedResponse["data"][randomIndex]["_source"]["urlToImage"] == null? "https://www.teliacompany.com/Assets/Images/not-available.png": parsedResponse["data"][randomIndex]["_source"]["urlToImage"];
 
 				this.news.forEach((article)
 				{
@@ -336,14 +346,14 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 	{
 		print("Firebase initialized");
 
-		final FirebaseMessaging firebaseMessaging = FirebaseMessaging();		
+		final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
 		firebaseMessaging.configure
 		(
 			onMessage: (Map<String, dynamic> message) async
 			{
-				print("onMessage: $message");				
-				
+				print("onMessage: $message");
+
 				Toast.show("Refreshing News", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
 
 				this.fetchNews(showLoader: false);
@@ -354,12 +364,12 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 				var data = message["data"];
 
-				print(data);				
+				print(data);
 
 				await Store.store.setString("title", data["title"]);
 				await Store.store.setString("description", data["description"]);
-				await Store.store.setString("pic", data["urlToImage"]);				
-				await Store.store.setString("created", data["publishedAt"]);				
+				await Store.store.setString("pic", data["urlToImage"]);
+				await Store.store.setString("created", data["publishedAt"]);
 				await Store.store.setString("author", data["author"]);
 				await Store.store.setString("content", data["content"]);
 				await Store.store.setString("url", data["url"]);
@@ -373,22 +383,22 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 				var data = message["data"];
 
-				print(data);				
+				print(data);
 
 				await Store.store.setString("title", data["title"]);
 				await Store.store.setString("description", data["description"]);
-				await Store.store.setString("pic", data["urlToImage"]);				
-				await Store.store.setString("created", data["publishedAt"]);				
+				await Store.store.setString("pic", data["urlToImage"]);
+				await Store.store.setString("created", data["publishedAt"]);
 				await Store.store.setString("author", data["author"]);
 				await Store.store.setString("content", data["content"]);
 				await Store.store.setString("url", data["url"]);
 
 				Navigator.pushNamed(context, "details");
-			}			
+			}
 		);
 
 		firebaseMessaging.subscribeToTopic("news");
-	}	
+	}
 
 	Widget tabSection(List<dynamic> data, BuildContext bcontext)
 	{
@@ -396,7 +406,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 
 		if (data.length != 0)
 		{
-			return 
+			return
 			(
 				Container
 				(
@@ -404,19 +414,19 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 					child: Column
 					(
 						crossAxisAlignment: CrossAxisAlignment.start,
-						children: 
-						[							
+						children:
+						[
 							GestureDetector
 							(
 								child: Container
-								(										
-									height: 250.0,			
-									margin: EdgeInsets.only(bottom: 10.0),					
+								(
+									height: 250.0,
+									margin: EdgeInsets.only(bottom: 10.0),
 									child: Card
-									(									
-										semanticContainer: true,																							
+									(
+										semanticContainer: true,
 										child: Container
-										(										
+										(
 											decoration: BoxDecoration
 											(
 												image: DecorationImage
@@ -429,11 +439,11 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 											child: Column
 											(
 												crossAxisAlignment: CrossAxisAlignment.start,
-												children: 
-												[																				
+												children:
+												[
 													Text
 													(
-														data[randomIndex]["title"], style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.white),													
+														data[randomIndex]["title"], style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.white),
 													),
 													Container(margin: EdgeInsets.only(top:5)),
 													Text(" " + DateFormat("dd-MMM-y").format(DateTime.parse(data[randomIndex]["publishedAt"])) + " ", style: TextStyle(color: Colors.white, backgroundColor: Colors.redAccent))
@@ -461,36 +471,44 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 							Expanded
 							(
 								child: Container
-								(																											
+								(
 									child: ListView.builder
 									(
 										itemCount: data.length,
 										itemBuilder: (context, index)
-										{	
-											if (index != 0)										
+										{
+											if (index != 0)
 											{
 												return Column
 												(
-													children: 
+													children:
 													[
 														ListTile
-														(												
+														(
 															dense: true,
 															contentPadding: EdgeInsets.only(right:5.0, bottom: 5.0, top: 5.0),
-															leading: CircleAvatar
+															leading: AspectRatio
 															(
-																backgroundImage: NetworkImage(data[index]["urlToImage"]!=null?data[index]["urlToImage"]:"https://www.publicdomainpictures.net/pictures/280000/nahled/not-found-image-15383864787lu.jpg"),
-
-																radius: 25,
-															) ,
+																aspectRatio: 1/1,
+																child: ClipOval
+																(
+																	child: FadeInImage.assetNetwork
+																	(
+																		fit: BoxFit.cover,
+																		placeholder: "assets/logo2.jpg",
+																		image: data[index]["urlToImage"] == null ? "assets/logo.jpg" : data[index]["urlToImage"],
+																		fadeInCurve: Curves.linear,
+																	),
+																),
+															),
 															title: Text(data[index]["title"],style: TextStyle(fontFamily: "comic-sans", fontSize: 15.0)),
 															isThreeLine: true,
 															subtitle: Column
 															(
 																crossAxisAlignment: CrossAxisAlignment.start,
-																children: 
+																children:
 																[
-																	Container(margin: EdgeInsets.only(top:5.0)),														
+																	Container(margin: EdgeInsets.only(top:5.0)),
 																	Text(DateFormat("dd-MMM-y H:m").format(DateTime.parse(data[index]["publishedAt"])),style: TextStyle(fontSize: 12.0))
 																]
 															),
@@ -514,29 +532,29 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 													],
 												);
 											}
-											else 
+											else
 											{
 												return Column
 												(
 
 												);
 											}
-										}	
+										}
 									),
 								)
-							)					
+							)
 						],
-					)								
+					)
 				)
 			);
 		}
-		else 
+		else
 		{
 			return
 			(
 				Container()
 			);
-		}		
+		}
 	}
 
 	openLink(String url) async
@@ -545,7 +563,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 		{
 			await launch(url);
 		}
-		else 
+		else
 		{
 			throw "Could Not Open" + url;
 		}
