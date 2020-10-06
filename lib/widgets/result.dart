@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:newsapp/Store.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Result extends StatelessWidget
 {
@@ -65,15 +65,17 @@ class Result extends StatelessWidget
 													subtitle: Text(" " + DateFormat("dd-MMM-y hh:mm").format(DateTime.parse(news[index]["_source"]["publishedAt"]))),
 													onTap: () async
 													{
-														await Store.store.setString("title", news[index]["_source"]["title"]);
-														await Store.store.setString("description", news[index]["_source"]["description"]);
-														await Store.store.setString("created", news[index]["_source"]["publishedAt"]);
-														await Store.store.setString("pic", news[index]["_source"]["urlToImage"]);
-														await Store.store.setString("author", news[index]["_source"]["author"]);
-														await Store.store.setString("content", news[index]["_source"]["content"]);
-														await Store.store.setString("url", news[index]["_source"]["url"]);
+														// await Store.store.setString("title", news[index]["_source"]["title"]);
+														// await Store.store.setString("description", news[index]["_source"]["description"]);
+														// await Store.store.setString("created", news[index]["_source"]["publishedAt"]);
+														// await Store.store.setString("pic", news[index]["_source"]["urlToImage"]);
+														// await Store.store.setString("author", news[index]["_source"]["author"]);
+														// await Store.store.setString("content", news[index]["_source"]["content"]);
+														// await Store.store.setString("url", news[index]["_source"]["url"]);
 
-														Navigator.pushNamed(bcontext, "details");
+														// Navigator.pushNamed(bcontext, "details");
+
+														this.openLink(news[index]["_source"]["url"]);
 													},
 													
 												),
@@ -90,5 +92,17 @@ class Result extends StatelessWidget
 				)
 			)
 		);
+	}
+
+	openLink(String url) async
+	{
+		if (await canLaunch(url))
+		{
+			await launch(url);
+		}
+		else 
+		{
+			throw "Could Not Open" + url;
+		}
 	}
 }

@@ -1,12 +1,13 @@
 import 'dart:convert';
-// import 'dart:math';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:newsapp/Store.dart';
 import 'package:newsapp/api.dart';
+import 'package:newsapp/config.dart';
 import 'package:toast/toast.dart';
 import 'loader.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class Home extends StatefulWidget
@@ -96,7 +97,7 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 										Container
 										(											
 											margin: EdgeInsets.only(left: 10),
-											child: Text("Minutes", style: TextStyle(color: Colors.red)),
+											child: Text("Minutes", style: TextStyle(color: Color(int.parse(logoColor)))),
 										),
 										Expanded
 										(											
@@ -137,13 +138,13 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 							),														
 							bottom: TabBar
 							(	
-								indicatorColor: Colors.redAccent,	
-								indicatorWeight: 4,					
+								indicatorColor: Colors.redAccent,
+								indicatorWeight: 4,
 								indicatorSize: TabBarIndicatorSize.tab,
 								unselectedLabelColor: Colors.grey,
 								labelColor: Colors.red,
 								isScrollable: true,
-								tabs: 
+								tabs:
 								[
 									Container
 									(
@@ -443,16 +444,18 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 								),
 								onTap: () async
 								{
-									await Store.store.setString("source", data[randomIndex]["source"]["name"]);
-									await Store.store.setString("title", data[randomIndex]["title"]);
-									await Store.store.setString("description", data[randomIndex]["description"]);
-									await Store.store.setString("created", data[randomIndex]["publishedAt"]);
-									await Store.store.setString("pic", data[randomIndex]["urlToImage"]);
-									await Store.store.setString("author", data[randomIndex]["author"]);
-									await Store.store.setString("content", data[randomIndex]["content"]);
-									await Store.store.setString("url", data[randomIndex]["url"]);
+									// await Store.store.setString("source", data[randomIndex]["source"]["name"]);
+									// await Store.store.setString("title", data[randomIndex]["title"]);
+									// await Store.store.setString("description", data[randomIndex]["description"]);
+									// await Store.store.setString("created", data[randomIndex]["publishedAt"]);
+									// await Store.store.setString("pic", data[randomIndex]["urlToImage"]);
+									// await Store.store.setString("author", data[randomIndex]["author"]);
+									// await Store.store.setString("content", data[randomIndex]["content"]);
+									// await Store.store.setString("url", data[randomIndex]["url"]);
 
-									Navigator.pushNamed(bcontext, "details");
+									// Navigator.pushNamed(bcontext, "details");
+
+									this.openLink(data[randomIndex]["url"]);
 								},
 							),
 							Expanded
@@ -493,16 +496,18 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 															),
 															onTap: () async
 															{
-																await Store.store.setString("source", data[index]["source"]["name"]);
-																await Store.store.setString("title", data[index]["title"]);
-																await Store.store.setString("description", data[index]["description"]);
-																await Store.store.setString("created", data[index]["publishedAt"]);
-																await Store.store.setString("pic", data[index]["urlToImage"]);
-																await Store.store.setString("author", data[index]["author"]);
-																await Store.store.setString("content", data[index]["content"]);
-																await Store.store.setString("url", data[index]["url"]);
+																// await Store.store.setString("source", data[index]["source"]["name"]);
+																// await Store.store.setString("title", data[index]["title"]);
+																// await Store.store.setString("description", data[index]["description"]);
+																// await Store.store.setString("created", data[index]["publishedAt"]);
+																// await Store.store.setString("pic", data[index]["urlToImage"]);
+																// await Store.store.setString("author", data[index]["author"]);
+																// await Store.store.setString("content", data[index]["content"]);
+																// await Store.store.setString("url", data[index]["url"]);
 
-																Navigator.pushNamed(bcontext, "details");
+																// Navigator.pushNamed(bcontext, "details");
+
+																this.openLink(data[index]["url"]);
 															},
 														),
 														Divider(color: Colors.grey)
@@ -532,5 +537,17 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 				Container()
 			);
 		}		
-	}	
+	}
+
+	openLink(String url) async
+	{
+		if (await canLaunch(url))
+		{
+			await launch(url);
+		}
+		else 
+		{
+			throw "Could Not Open" + url;
+		}
+	}
 }

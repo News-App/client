@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:newsapp/Store.dart';
 import 'package:newsapp/api.dart';
+import 'package:newsapp/config.dart';
 import 'package:newsapp/widgets/categories.dart';
 import 'package:newsapp/widgets/home.dart';
 import 'package:newsapp/widgets/news_details.dart';
@@ -105,16 +106,31 @@ class SplashState extends State<Splash>
 
 	initState()
 	{
-		super.initState();		
+		super.initState();
+		fetchBaseUrl();
+	}
+
+	fetchBaseUrl() async
+	{
+		Api apiClient = Api();
+
+		var response = await apiClient.get("/news/base");
+		var parsedResponse = jsonDecode(response);
+
+		baseUrl = parsedResponse["url"];
+		logoColor = parsedResponse["color"];
+
+		print(baseUrl);
+
 		fetchNews();
 	}
 
 	fetchNews() async
-	{		
+	{
 		print("firebased");
 
 		Api apiClient = Api();
-		await Store.init();	
+		await Store.init();
 
 		await Store.store.setString("showLoader", "1");
 		await Store.store.setString("categories", '[{"_source":{"name":""}}]');

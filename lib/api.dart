@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:newsapp/config.dart';
+
 class Api 
 {
-	final String baseUrl = "https://the-news-app-1.herokuapp.com";
-
 	Future<String> post(String url, Map body) async 
 	{
 		HttpClient httpClient = new HttpClient();
 		String contentType = "application/json";
 
-		HttpClientRequest request = await httpClient.postUrl(Uri.parse(this.baseUrl + url));
+		HttpClientRequest request = await httpClient.postUrl(Uri.parse(baseUrl + url));
 		request.headers.set('content-type', contentType);
 		request.add(utf8.encode(json.encode(body)));
 		
@@ -27,7 +27,7 @@ class Api
 		HttpClient httpClient = new HttpClient();
 		String contentType = "application/json";
 
-		HttpClientRequest request = await httpClient.getUrl(Uri.parse(this.baseUrl + url));
+		HttpClientRequest request = await httpClient.getUrl(Uri.parse(baseUrl + url));
 		request.headers.set('content-type', contentType);		
 		
 		HttpClientResponse response = await request.close();
