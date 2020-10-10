@@ -1,4 +1,4 @@
-package com.souparnika.newsapp
+package com.souparnika.minutes
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
