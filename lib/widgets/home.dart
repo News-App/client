@@ -6,11 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:newsapp/Store.dart';
 import 'package:newsapp/api.dart';
 import 'package:newsapp/config.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:toast/toast.dart';
 import 'loader.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 
 class Home extends StatefulWidget
@@ -432,7 +430,8 @@ class HomeState extends State<Home> with WidgetsBindingObserver
 												image: DecorationImage
 												(
 													image: NetworkImage(data[randomIndex]["urlToImage"] != null? (data[randomIndex]["urlToImage"]):("https://www.publicdomainpictures.net/pictures/280000/nahled/not-found-image-15383864787lu.jpg")),
-													fit: BoxFit.cover
+													fit: BoxFit.cover,
+													colorFilter: new ColorFilter.mode(Color.fromRGBO(12, 25, 25, 0.796), BlendMode.dstATop),
 												),
 											),
 											padding: EdgeInsets.all(10),

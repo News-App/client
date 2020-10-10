@@ -26,21 +26,21 @@ class Result extends StatelessWidget
 					(
 						color: Colors.white,
 						margin: EdgeInsets.only(top:13),
-						child: 
-						news.length == 0 ? 
+						child:
+						news.length == 0 ?
 						Container
-						(														
+						(
 							padding: EdgeInsets.all(80),
 							child: Column
-							(			
-								crossAxisAlignment: CrossAxisAlignment.center,					
+							(
+								crossAxisAlignment: CrossAxisAlignment.center,
 								children:
 								[
 									Icon(Icons.search, size: 150, color: Colors.grey[300]),
 									Text("Opps we couldn't find anything related to that. Please refine and try again!", textAlign: TextAlign.center, style: TextStyle(fontSize: 20, color: Colors.grey[500])),
 								]
 							)
-						): 
+						):
 						ListView.builder
 						(
 							itemCount: news.length,
@@ -49,11 +49,11 @@ class Result extends StatelessWidget
 								return
 								(
 									Container
-									(										
+									(
 										child:Column
 										(
 											children:
-											[ 
+											[
 												ListTile
 												(
 													leading: CircleAvatar
@@ -77,17 +77,17 @@ class Result extends StatelessWidget
 
 														this.openLink(news[index]["_source"]["url"]);
 													},
-													
+
 												),
 												Divider()
 											]
 										)
 
 									)
-									
+
 								);
 							}
-						)									
+						)
 					)
 				)
 			)
@@ -100,7 +100,7 @@ class Result extends StatelessWidget
 		{
 			await launch(url);
 		}
-		else 
+		else
 		{
 			throw "Could Not Open" + url;
 		}

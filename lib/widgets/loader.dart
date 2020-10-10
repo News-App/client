@@ -17,8 +17,8 @@ class Loader extends StatelessWidget
 				height: 100.0,
 				width: 100.0,
 				child: Column
-				(																							
-					children: 
+				(
+					children:
 					[
 						CircularProgressIndicator
 						(

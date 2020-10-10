@@ -10,7 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class NewsDetails extends StatefulWidget
 {
-	createState() 
+	createState()
 	{
 		return(NewsDetailsState());
 	}
@@ -33,7 +33,7 @@ class NewsDetailsState extends State<NewsDetails>
 		super.initState();
 
 		try
-		{			
+		{
 			this.title = Store.store.getString("title") == null? ("NA"): (Store.store.getString("title"));
 			this.author = Store.store.getString("author") == null? ("NA"): (Store.store.getString("author"));
 			this.created = Store.store.getString("created") == null? ("NA"): (DateFormat("dd-MMM-y").format(DateTime.parse(Store.store.getString("created"))));
@@ -72,7 +72,7 @@ class NewsDetailsState extends State<NewsDetails>
 					title: Row
 					(
 						mainAxisAlignment: MainAxisAlignment.spaceBetween,
-						children: 
+						children:
 						[
 							Text("In Brief", style: TextStyle(color: Colors.red)),
 							Visibility
@@ -83,8 +83,8 @@ class NewsDetailsState extends State<NewsDetails>
 									height: 20,
 									width: 20,
 									child: CircularProgressIndicator
-									(									
-										strokeWidth: 1,									
+									(
+										strokeWidth: 1,
 										backgroundColor: Colors.redAccent,
 									),
 								)
@@ -99,7 +99,7 @@ class NewsDetailsState extends State<NewsDetails>
 				body: SingleChildScrollView
 				(
 					child: Container
-					(					
+					(
 						child: Column
 						(
 							crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,18 +114,18 @@ class NewsDetailsState extends State<NewsDetails>
 									padding: EdgeInsets.all(15.0),
 									child: Column
 									(
-										children: 
+										children:
 										[
 											Text(this.title, style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold)),
 											Container(margin:EdgeInsets.only(bottom:5.0)),
 											Row
 											(
 												mainAxisAlignment: MainAxisAlignment.spaceBetween,
-												children: 
+												children:
 												[
 													Row
 													(
-														children: 
+														children:
 														[
 															Icon(Icons.face, color: Colors.red,),
 															Text(" " + this.author)
@@ -133,7 +133,7 @@ class NewsDetailsState extends State<NewsDetails>
 													),
 													Text(this.created)
 												],
-											),					
+											),
 											Divider
 											(
 												color: Colors.red,
@@ -141,12 +141,12 @@ class NewsDetailsState extends State<NewsDetails>
 											Container
 											(
 												child: Html
-												(						
-													defaultTextStyle: TextStyle(fontSize: 18),							
+												(
+													defaultTextStyle: TextStyle(fontSize: 18),
 													renderNewlines: true,
 													data: this.description
 												)
-											)										
+											)
 										]
 									)
 								)
@@ -155,18 +155,18 @@ class NewsDetailsState extends State<NewsDetails>
 					)
 				),
 				bottomNavigationBar: BottomAppBar
-				(					
+				(
 					child: Row
 					(
 						mainAxisAlignment: MainAxisAlignment.spaceBetween,
-						children: 
+						children:
 						[
 							FlatButton
-							(							
+							(
 								child: Column
 								(
 									mainAxisSize: MainAxisSize.min,
-									children: 
+									children:
 									[
 										Icon(Icons.share, color: Colors.red),
 										Text("Share", style: TextStyle(fontSize: 10)),
@@ -174,16 +174,16 @@ class NewsDetailsState extends State<NewsDetails>
 								),
 								onPressed: () async
 								{
-									var resp = await get(this.pic);										
+									var resp = await get(this.pic);
 									await Share.file(this.title, this.title, resp.bodyBytes, 'image/jpeg', text: this.title);
 								},
 							),
 							FlatButton
-							(								
+							(
 								child: Column
 								(
 									mainAxisSize: MainAxisSize.min,
-									children: 
+									children:
 									[
 										Icon(Icons.more, color: Colors.red),
 										Text("Read More", style: TextStyle(fontSize: 10)),
@@ -207,7 +207,7 @@ class NewsDetailsState extends State<NewsDetails>
 		{
 			await launch(url);
 		}
-		else 
+		else
 		{
 			throw "Could Not Open" + url;
 		}
@@ -220,11 +220,11 @@ class NewsDetailsState extends State<NewsDetails>
 		print(newsUrl);
 
 		Api apiClient = Api();
-		await Store.init();		
+		await Store.init();
 
 		String url = "/news/scrape";
 
-		Map body = 
+		Map body =
 		{
 			"url": newsUrl,
 			"tag": tag
@@ -239,13 +239,13 @@ class NewsDetailsState extends State<NewsDetails>
 
 		if (parsedResponse["data"] != null)
 		{
-			setState(() 
+			setState(()
 			{
-				this.description = parsedResponse["data"];				
+				this.description = parsedResponse["data"];
 			});
 		}
 
-		setState(() 
+		setState(()
 		{
 			this.scraping = false;
 		});

@@ -9,15 +9,15 @@ import 'package:newsapp/widgets/news_details.dart';
 import 'package:newsapp/widgets/result.dart';
 import 'package:newsapp/widgets/search_page.dart';
 
-void main() 
+void main()
 {
 	runApp(MaterialApp
 	(
 		debugShowCheckedModeBanner: false,
 		theme: ThemeData(primaryColor: Colors.red, accentColor: Colors.white),
 		home: Splash(),
-		title: "News App",		
-		routes: 
+		title: "News App",
+		routes:
 		{
 			"home": (context) => Home(),
 			"details": (context) => NewsDetails(),
@@ -54,17 +54,17 @@ class SplashState extends State<Splash>
 		return
 		(
 			Container
-			(				
+			(
 				color: Colors.redAccent,
 				child: Stack
 				(
-					children: 
-					[	
+					children:
+					[
 						Align
 						(
 							alignment: FractionalOffset.bottomCenter,
 							child: Container
-							(								
+							(
 								margin: EdgeInsets.only(bottom:50),
 								height: 40,
 								width: 40,
@@ -76,7 +76,7 @@ class SplashState extends State<Splash>
 							alignment: FractionalOffset.center,
 							child: Container
 							(
-								margin: EdgeInsets.only(bottom:220),								
+								margin: EdgeInsets.only(bottom:220),
 								child: Icon(Icons.av_timer, size: 90, color: Colors.white,)
 							)
 						),
@@ -85,7 +85,7 @@ class SplashState extends State<Splash>
 							alignment: FractionalOffset.center,
 							child: Container
 							(
-								margin: EdgeInsets.only(bottom:50),								
+								margin: EdgeInsets.only(bottom:50),
 								child: Text("Minutes", style: TextStyle(color: Colors.white, decoration: TextDecoration.none, decorationColor: Colors.grey, fontSize: 50.0, fontWeight: FontWeight.normal))
 							)
 						),
@@ -145,14 +145,14 @@ class SplashState extends State<Splash>
 		print(parsedResponse);
 
 		if(parsedResponse["status"] == 200)
-		{			
+		{
 			int randomIndex = 0;
 			await Store.store.setString("splashed", "1");
 
-			setState(() 
+			setState(()
 			{
 				this.news = parsedResponse["data"];
-				
+
 				this.news.forEach((article)
 				{
 					print(article["_source"]["category"]);
@@ -178,8 +178,8 @@ class SplashState extends State<Splash>
 
 				Navigator.pushReplacementNamed
 				(
-					context, "home", 
-					arguments: 
+					context, "home",
+					arguments:
 					{
 						"news": this.news,
 						"headlines": this.headlines,
@@ -193,8 +193,8 @@ class SplashState extends State<Splash>
 					}
 				);
 			});
-		}		
-	}	
+		}
+	}
 }
 
 

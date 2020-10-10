@@ -15,24 +15,24 @@ class SearchPage extends StatefulWidget
 class SearchPageState extends State<SearchPage>
 {
 	List<dynamic> trendingSearches = [];
-	
+
 	final prefixUrl = "/news";
-	
+
 	var message = "Here are the top 2 searches at the moment. Go ahead and click them to see some interesting results that popped up";
 
 	void initState()
 	{
-		super.initState();		
+		super.initState();
 
 		WidgetsBinding.instance.addPostFrameCallback((_)
-		{				
-			fetchTrending();		
+		{
+			fetchTrending();
 		});
 	}
-	
+
 	Widget build(BuildContext bcontext)
 	{
-		return 
+		return
 		(
 			MaterialApp
 			(
@@ -42,18 +42,18 @@ class SearchPageState extends State<SearchPage>
 					appBar: AppBar
 					(
 						backgroundColor: Colors.white,
-						title: Text("Trending Searches", style: TextStyle(color: Colors.redAccent)),						
+						title: Text("Trending Searches", style: TextStyle(color: Colors.redAccent)),
 					),
 					body: Container
-					(										
+					(
 						child: Column
 						(
-							children: 
+							children:
 							[
 								Container
 								(
 									padding: EdgeInsets.all(14),
-									width: double.infinity,									
+									width: double.infinity,
 									height: 80,
 									child: Text(message, style: TextStyle(fontSize: 15)),
 								),
@@ -62,15 +62,15 @@ class SearchPageState extends State<SearchPage>
 									child: ListView.builder
 									(
 										itemCount: this.trendingSearches.length,
-										itemBuilder: (context, index) 
+										itemBuilder: (context, index)
 										{
 											return Column
 											(
-												children: 								
-												[										
+												children:
+												[
 													ListTile
 													(
-														onTap: () 
+														onTap: ()
 														{
 															this.search(this.trendingSearches[index]["_source"]["searched"], bcontext);
 														},
@@ -87,7 +87,7 @@ class SearchPageState extends State<SearchPage>
 								)
 							],
 						)
-						
+
 					)
 				)
 			)
@@ -112,22 +112,22 @@ class SearchPageState extends State<SearchPage>
 
 		Navigator.pop(context);
 
-		setState(() 
+		setState(()
 		{
-			message = parsedResponse["message"];	
-			this.trendingSearches = parsedResponse["data"];				
+			message = parsedResponse["message"];
+			this.trendingSearches = parsedResponse["data"];
 		});
 	}
 
 	search(String searchText, BuildContext context) async
-	{		
+	{
 		showDialog(context: context, barrierDismissible: false, builder: (BuildContext context) => Loader("Fetching results for search"));
 
 		Api apiClient = Api();
 
 		String url = this.prefixUrl + "/search/";
 
-		Map body = 
+		Map body =
 		{
 			"search": searchText
 		};
@@ -136,8 +136,8 @@ class SearchPageState extends State<SearchPage>
 		var parsedResponse = jsonDecode(response);
 
 		Navigator.pop(context);
-	
-		var news = parsedResponse["data"];		
+
+		var news = parsedResponse["data"];
 
 		if (parsedResponse["status"] == 200)
 		{
@@ -145,11 +145,11 @@ class SearchPageState extends State<SearchPage>
 
 			Navigator.pushNamed
 			(
-				context, 
+				context,
 				"result",
-				arguments: 
+				arguments:
 				{
-					"results": news, 
+					"results": news,
 					"searchedText": searchText
 				}
 			);
